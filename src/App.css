@@ -1,38 +1,73 @@
-.App {
-  text-align: center;
+.app {
+  max-width: 760px;
+  margin: 24px auto;
+  padding: 0 16px 32px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.app__header {
+  padding: 12px 0;
+  text-align: left;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.app__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.app__counter {
+  margin: 6px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+.contacts {
+  margin-top: 12px;
+}
+
+.contacts__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 12px;
 }
 
-.App-link {
-  color: #61dafb;
+.contacts__list-item {
+  margin: 0;
+  padding: 0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.contacts__load-more {
+  width: 100%;
+  height: 44px;
+  margin-top: 16px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.firstNameLastName {
+  padding: 0 0 10px;
+  color: #333333;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.jobTitle {
+  padding: 0 0 20px;
+  color: #e74c3c;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.emailAddress {
+  color: #666666;
+  font-size: 14px;
+  line-height: 1.8em;
 }

@@ -1,17 +1,23 @@
-import React from "react";
-
-type Props = {
-  data: {
-    firstNameLastName: string;
-    jobTitle: string;
-    emailAddress: string;
-  };
+type PersonInfoProps = {
+  firstNameLastName: string;
+  jobTitle: string;
+  emailAddress: string;
+  id: string;
+  isSelected: boolean;
+  onClick: (id: string) => void;
 };
 
-function PersonInfo(props: Props) {
-  const { data } = props;
+// aria
+function PersonInfo({
+  firstNameLastName,
+  jobTitle,
+  emailAddress,
+  isSelected,
+  id,
+  onClick,
+}: PersonInfoProps) {
   return (
-    <div
+    <article
       style={{
         display: "flex",
         height: "100px",
@@ -20,15 +26,17 @@ function PersonInfo(props: Props) {
         padding: "32px",
         boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.15)",
         margin: "10px 0",
-        background: "#fff",
+        background: isSelected ? "red" : "#fff",
         cursor: "pointer",
       }}
       className="person-info"
+      onClick={() => onClick(id)}
     >
-      <div className="firstNameLastName">{data.firstNameLastName}</div>
-      <div className="jobTitle">{data.jobTitle}</div>
-      <div className="emailAddress">{data.emailAddress}</div>
-    </div>
+      <div className="firstNameLastName">{firstNameLastName}</div>
+      <div className="jobTitle">{jobTitle}</div>
+      <div className="emailAddress">{emailAddress}</div>
+      <div>debug id: {id}</div>
+    </article>
   );
 }
 
