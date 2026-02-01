@@ -1,46 +1,16 @@
-import { useCallback, useMemo, useState } from "react";
 import Header from "./components/Header/Header";
 import ContactsList from "./components/ContactsList/ContactsList";
 import LoadMoreButton from "./components/LoadMoreButton/LoadMoreButton";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import "./App.css";
-import type { ContactProps } from "./types";
 import { useContacts } from "./hooks/useContacts";
+import { useSelectedContacts } from "./hooks/useSelectedContacts";
 
-// react profiller
 function App() {
-  const [selectedContactsIds, setSelectedContactsIds] = useState(
-    () => new Set<string>()
-  );
   const { contactsData, isLoading, error, fetchNextPage } = useContacts();
 
-  const toggleContactSelect = useCallback((id: string) => {
-    setSelectedContactsIds((prevState) => {
-      const newState = new Set(prevState);
-
-      if (newState.has(id)) {
-        newState.delete(id);
-      } else {
-        newState.add(id);
-      }
-
-      return newState;
-    });
-  }, []);
-
-  const orderedContacts = useMemo(() => {
-    const selectedCards: ContactProps[] = [];
-    const unselectedCards: ContactProps[] = [];
-
-    contactsData.forEach((item) => {
-      if (selectedContactsIds.has(item.id)) {
-        return selectedCards.push(item);
-      }
-      unselectedCards.push(item);
-    });
-
-    return [...selectedCards, ...unselectedCards];
-  }, [contactsData, selectedContactsIds]);
+  const { selectedContactsIds, toggleContactSelect, orderedContacts } =
+    useSelectedContacts(contactsData);
 
   return (
     <div className="app">
