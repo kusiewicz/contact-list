@@ -3,9 +3,43 @@
   height: 44px;
   margin-top: 16px;
   border-radius: 10px;
-  border: 1px solid #ddd;
-  background: #fff;
+  border: none;
+  background: #4a7dc7;
+  color: #fff;
   font-weight: 600;
   cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s, box-shadow 0.2s;
 }
 
+.contacts__load-more:hover:not(:disabled) {
+  background: #3d6bb3;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.contacts__load-more:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.contacts__load-more-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.contacts__load-more-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 2px solid rgba(16, 24, 40, 0.18);
+  border-top-color: rgba(16, 24, 40, 0.55);
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

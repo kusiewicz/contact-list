@@ -1,32 +1,32 @@
 import { act, renderHook } from "@testing-library/react";
-import type { ContactProps } from "../types";
-import { useSelectedContacts } from "./useSelectedContacts";
+import { ContactProps } from "src/types";
+import { useContactsSelection } from "./useContactsSelection";
 
 const mockContacts: ContactProps[] = [
   {
     id: "1",
     firstNameLastName: "Jan Kowalski",
     jobTitle: "Developer",
-    emailAddress: "jan@example.com",
+    emailAddress: "jan@o2.com",
   },
   {
     id: "2",
     firstNameLastName: "Anna Nowak",
     jobTitle: "Designer",
-    emailAddress: "anna@example.com",
+    emailAddress: "anna@o2.com",
   },
 ];
 
 describe("useSelectedContacts", () => {
   it("returns empty selected set initially", () => {
-    const { result } = renderHook(() => useSelectedContacts(mockContacts));
+    const { result } = renderHook(() => useContactsSelection(mockContacts));
 
     expect(result.current.selectedContactsIds.size).toBe(0);
     expect(result.current.orderedContacts).toEqual(mockContacts);
   });
 
   it("toggleContactSelect adds and removes id from selected set", () => {
-    const { result } = renderHook(() => useSelectedContacts(mockContacts));
+    const { result } = renderHook(() => useContactsSelection(mockContacts));
 
     act(() => {
       result.current.toggleContactSelect("1");
@@ -42,7 +42,7 @@ describe("useSelectedContacts", () => {
   });
 
   it("orderedContacts puts selected contacts first", () => {
-    const { result } = renderHook(() => useSelectedContacts(mockContacts));
+    const { result } = renderHook(() => useContactsSelection(mockContacts));
 
     act(() => {
       result.current.toggleContactSelect("2");
@@ -54,7 +54,7 @@ describe("useSelectedContacts", () => {
 
   it("updates orderedContacts when contactsData changes", () => {
     const { result, rerender } = renderHook(
-      ({ contacts }) => useSelectedContacts(contacts),
+      ({ contacts }) => useContactsSelection(contacts),
       { initialProps: { contacts: mockContacts } }
     );
 
@@ -64,7 +64,7 @@ describe("useSelectedContacts", () => {
         id: "3",
         firstNameLastName: "Piotr",
         jobTitle: "PM",
-        emailAddress: "piotr@example.com",
+        emailAddress: "piotr@o2.com",
       },
     ];
     rerender({ contacts: newContacts });

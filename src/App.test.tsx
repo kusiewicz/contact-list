@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./App";
-import { useContacts } from "./hooks/useContacts";
+import { useContacts } from "./hooks/useContacts/useContacts";
 
-jest.mock("./hooks/useContacts");
+jest.mock("./hooks/useContacts/useContacts");
 
 const mockContacts = [
   {
@@ -23,7 +23,25 @@ describe("App", () => {
       isLoading: false,
       error: null,
       fetchNextPage: jest.fn(),
+      retry: jest.fn(),
     });
+  });
+
+  it("renders LoadingState when loading with no data", () => {
+    jest.mocked(useContacts).mockReturnValue({
+      contactsData: [],
+      isLoading: true,
+      error: null,
+      fetchNextPage: jest.fn(),
+      retry: jest.fn(),
+    });
+
+    render(<App />);
+
+    expect(screen.getByText("Loading contacts…")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Show more" })
+    ).not.toBeInTheDocument();
   });
 
   it("renders Header with selected count and ContactsList with contacts", () => {
@@ -43,10 +61,14 @@ describe("App", () => {
 
     expect(screen.getByText("Selected contacts: 0")).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("article"));
+    await userEvent.click(
+      screen.getByRole("button", { name: /Jan Kowalski/ })
+    );
     expect(screen.getByText("Selected contacts: 1")).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("article"));
+    await userEvent.click(
+      screen.getByRole("button", { name: /Jan Kowalski/ })
+    );
     expect(screen.getByText("Selected contacts: 0")).toBeInTheDocument();
   });
 
@@ -57,6 +79,7 @@ describe("App", () => {
       isLoading: false,
       error: null,
       fetchNextPage,
+      retry: jest.fn(),
     });
 
     render(<App />);
@@ -65,16 +88,64 @@ describe("App", () => {
     expect(fetchNextPage).toHaveBeenCalledTimes(1);
   });
 
-  it("renders ErrorMessage when useContacts returns error", () => {
+  it("renders ErrorMessage with Retry when initial load fails", () => {
+    const retry = jest.fn();
     jest.mocked(useContacts).mockReturnValue({
       contactsData: [],
       isLoading: false,
       error: new Error(ERROR_LABEL),
       fetchNextPage: jest.fn(),
+      retry,
     });
 
     render(<App />);
 
     expect(screen.getByRole("alert")).toHaveTextContent(ERROR_LABEL);
+    expect(
+      screen.getByRole("button", { name: "Try again" })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Show more" })
+    ).not.toBeInTheDocument();
+  });
+
+  it("calls retry when Retry button is clicked on initial load error", async () => {
+    const retry = jest.fn();
+    jest.mocked(useContacts).mockReturnValue({
+      contactsData: [],
+      isLoading: false,
+      error: new Error(ERROR_LABEL),
+      fetchNextPage: jest.fn(),
+      retry,
+    });
+
+    render(<App />);
+    await userEvent.click(screen.getByRole("button", { name: "Try again" }));
+
+    expect(retry).toHaveBeenCalledTimes(1);
+  });
+
+  it("shows Retry instead of Show more when pagination fails", () => {
+    const retry = jest.fn();
+    jest.mocked(useContacts).mockReturnValue({
+      contactsData: mockContacts,
+      isLoading: false,
+      error: new Error(ERROR_LABEL),
+      fetchNextPage: jest.fn(),
+      retry,
+    });
+
+    render(<App />);
+
+    expect(
+      screen.getByText(mockContacts[0].firstNameLastName)
+    ).toBeInTheDocument();
+    expect(screen.getByText(ERROR_LABEL)).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Try again" })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Show more" })
+    ).not.toBeInTheDocument();
   });
 });

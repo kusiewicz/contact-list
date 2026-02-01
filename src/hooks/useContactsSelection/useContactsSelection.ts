@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
-import type { ContactProps } from "../types";
+import type { ContactProps } from "../../types";
 
-export const useSelectedContacts = (contactsData: ContactProps[]) => {
+export const useContactsSelection = (contactsData: ContactProps[]) => {
   const [selectedContactsIds, setSelectedContactsIds] = useState(
     () => new Set<string>()
   );

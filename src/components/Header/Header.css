@@ -1,19 +1,31 @@
 .app__header {
-  padding: 12px 0;
+  padding: 14px 0 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
   text-align: left;
+}
+
+.app__header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .app__title {
   margin: 0;
-  font-size: 22px;
-  font-weight: 700;
-  color: #111;
+  font-size: 26px;
 }
 
 .app__counter {
-  margin: 6px 0 0;
-  font-size: 14px;
+  margin: 2px 0 0;
+  white-space: nowrap;
+  font-size: 13px;
   font-weight: 600;
-  color: #555;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 8px 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
-

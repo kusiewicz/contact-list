@@ -12,28 +12,44 @@ const defaultProps = {
 };
 
 describe("PersonInfo", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("renders name, job title and email", () => {
     render(<PersonInfo {...defaultProps} />);
-    expect(screen.getByText(defaultProps.firstNameLastName)).toBeInTheDocument();
+
+    expect(
+      screen.getByText(defaultProps.firstNameLastName)
+    ).toBeInTheDocument();
     expect(screen.getByText(defaultProps.jobTitle)).toBeInTheDocument();
     expect(screen.getByText(defaultProps.emailAddress)).toBeInTheDocument();
   });
 
   it("calls onClick with id when clicked", async () => {
     render(<PersonInfo {...defaultProps} />);
-    await userEvent.click(screen.getByRole("article"));
+
+    await userEvent.click(
+      screen.getByRole("button", { name: /Jan Kowalski/i })
+    );
+
+    expect(defaultProps.onClick).toHaveBeenCalledTimes(1);
     expect(defaultProps.onClick).toHaveBeenCalledWith(defaultProps.id);
   });
 
-  it("has person-info--selected class when selected", () => {
+  it("has selected aria-pressed state when selected", () => {
     render(<PersonInfo {...defaultProps} isSelected={true} />);
-    const article = screen.getByRole("article");
-    expect(article).toHaveClass("person-info--selected");
+
+    expect(
+      screen.getByRole("button", { name: /Jan Kowalski/i })
+    ).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("does not have person-info--selected class when not selected", () => {
-    render(<PersonInfo {...defaultProps} />);
-    const article = screen.getByRole("article");
-    expect(article).not.toHaveClass("person-info--selected");
+  it("has not-selected aria-pressed state when not selected", () => {
+    render(<PersonInfo {...defaultProps} isSelected={false} />);
+
+    expect(
+      screen.getByRole("button", { name: /Jan Kowalski/i })
+    ).toHaveAttribute("aria-pressed", "false");
   });
 });

@@ -1,5 +1,17 @@
 .app {
   max-width: 760px;
   margin: 24px auto;
-  padding: 0 16px 32px;
+  padding: 16px 16px 48px;
+}
+
+.contacts {
+  margin-top: 12px;
+  overflow-anchor: none;
+}
+
+@media (max-width: 480px) {
+  .app {
+    margin: 12px auto;
+    padding: 20px 14px 60px;
+  }
 }

@@ -1,7 +1,3 @@
-.contacts {
-  margin-top: 12px;
-}
-
 .contacts__list {
   list-style: none;
   margin: 0;
@@ -9,10 +5,10 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  overflow-anchor: none;
 }
 
 .contacts__list-item {
   margin: 0;
   padding: 0;
 }
-

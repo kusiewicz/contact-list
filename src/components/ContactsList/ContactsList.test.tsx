@@ -19,7 +19,7 @@ const mockContacts: ContactProps[] = [
 ];
 
 describe("ContactsList", () => {
-  it("renders all contacts", () => {
+  it("renders all contacts as buttons", () => {
     render(
       <ContactsList
         contacts={mockContacts}
@@ -27,16 +27,17 @@ describe("ContactsList", () => {
         onToggleSelect={jest.fn()}
       />
     );
+
+    expect(screen.getAllByRole("listitem")).toHaveLength(2);
     expect(
-      screen.getByText(mockContacts[0].firstNameLastName)
+      screen.getByRole("button", { name: /Jan Kowalski/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByText(mockContacts[1].firstNameLastName)
+      screen.getByRole("button", { name: /Anna Nowak/i })
     ).toBeInTheDocument();
-    expect(screen.getAllByRole("article")).toHaveLength(2);
   });
 
-  it("calls onToggleSelect with contact id when contact is clicked", async () => {
+  it("calls onToggleSelect with contact id when clicked", async () => {
     const onToggleSelect = jest.fn();
     render(
       <ContactsList
@@ -45,20 +46,12 @@ describe("ContactsList", () => {
         onToggleSelect={onToggleSelect}
       />
     );
-    const articles = screen.getAllByRole("article");
-    await userEvent.click(articles[0]);
-    expect(onToggleSelect).toHaveBeenCalledWith(mockContacts[0].id);
-  });
 
-  it("has contacts__list class on list", () => {
-    render(
-      <ContactsList
-        contacts={mockContacts}
-        selectedContactsIds={new Set()}
-        onToggleSelect={jest.fn()}
-      />
+    await userEvent.click(
+      screen.getByRole("button", { name: /Jan Kowalski/i })
     );
-    const list = screen.getByRole("list");
-    expect(list).toHaveClass("contacts__list");
+
+    expect(onToggleSelect).toHaveBeenCalledTimes(1);
+    expect(onToggleSelect).toHaveBeenCalledWith("1");
   });
 });

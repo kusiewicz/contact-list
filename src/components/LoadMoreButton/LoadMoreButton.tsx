@@ -13,8 +13,14 @@ const LoadMoreButton = ({ isLoading, onClick }: LoadMoreButtonProps) => (
     onClick={onClick}
     className="contacts__load-more"
     disabled={isLoading}
+    aria-busy={isLoading}
   >
-    {isLoading ? LOADING_LABEL : SHOW_MORE_LABEL}
+    <span className="contacts__load-more-content">
+      {isLoading ? (
+        <span className="contacts__load-more-spinner" aria-hidden="true" />
+      ) : null}
+      <span>{isLoading ? LOADING_LABEL : SHOW_MORE_LABEL}</span>
+    </span>
   </button>
 );
 
