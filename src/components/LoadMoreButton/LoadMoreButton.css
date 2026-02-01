@@ -1,0 +1,11 @@
+.contacts__load-more {
+  width: 100%;
+  height: 44px;
+  margin-top: 16px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+

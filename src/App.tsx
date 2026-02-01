@@ -1,64 +1,32 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import apiData from "./api";
-import PersonInfo from "./PersonInfo";
+import { useCallback, useMemo, useState } from "react";
+import Header from "./components/Header/Header";
+import ContactsList from "./components/ContactsList/ContactsList";
+import LoadMoreButton from "./components/LoadMoreButton/LoadMoreButton";
+import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import "./App.css";
-
-type ContactProps = {
-  id: string;
-  firstNameLastName: string;
-  jobTitle: string;
-  emailAddress: string;
-};
+import type { ContactProps } from "./types";
+import { useContacts } from "./hooks/useContacts";
 
 // react profiller
 function App() {
-  const [contactsData, setContactsData] = useState<ContactProps[]>([]);
   const [selectedContactsIds, setSelectedContactsIds] = useState(
     () => new Set<string>()
   );
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error>();
-  const firstPagePromiseRef = useRef<Promise<ContactProps[]> | null>(null);
+  const { contactsData, isLoading, error, fetchNextPage } = useContacts();
 
-  const fetchFirstPage = useCallback(() => {
-    if (!firstPagePromiseRef.current) {
-      firstPagePromiseRef.current = apiData();
-    }
-    return firstPagePromiseRef.current;
-  }, []);
-
-  useEffect(() => {
-    const fetchContactsFirstPage = async () => {
-      try {
-        const contacts = await fetchFirstPage();
-        setContactsData(contacts);
-      } catch (error) {
-        setError(error as Error);
-      }
-    };
-
-    fetchContactsFirstPage();
-  }, [fetchFirstPage]);
-
-  const toggleContactSelect = (id: string) => {
+  const toggleContactSelect = useCallback((id: string) => {
     setSelectedContactsIds((prevState) => {
       const newState = new Set(prevState);
-      if (newState.has(id)) newState.delete(id);
-      else newState.add(id);
+
+      if (newState.has(id)) {
+        newState.delete(id);
+      } else {
+        newState.add(id);
+      }
+
       return newState;
     });
-  };
-
-  const fetchNextPage = async () => {
-    setIsLoading(true);
-    try {
-      const nextPage = await apiData().finally(() => setIsLoading(false));
-
-      setContactsData((prevState) => [...prevState, ...nextPage]);
-    } catch (error) {
-      setError(error as Error);
-    }
-  };
+  }, []);
 
   const orderedContacts = useMemo(() => {
     const selectedCards: ContactProps[] = [];
@@ -76,40 +44,16 @@ function App() {
 
   return (
     <div className="app">
-      <header className="app__header">
-        <h1 className="app__title">Contacts</h1>
-        <h2 className="app__counter" aria-live="polite">
-          Selected contacts: {selectedContactsIds.size}
-        </h2>
-      </header>
-
+      <Header selectedCount={selectedContactsIds.size} />
       <main>
         <section className="contacts">
-          <ul className="contacts__list">
-            {orderedContacts.map(
-              ({ id, firstNameLastName, jobTitle, emailAddress }) => (
-                <li className="contacts__list-item">
-                  <PersonInfo
-                    key={id}
-                    id={id}
-                    firstNameLastName={firstNameLastName}
-                    jobTitle={jobTitle}
-                    emailAddress={emailAddress}
-                    onClick={toggleContactSelect}
-                    isSelected={selectedContactsIds.has(id)}
-                  />
-                </li>
-              )
-            )}
-          </ul>
-          <button
-            onClick={fetchNextPage}
-            className="contacts__load-more"
-            disabled={isLoading}
-          >
-            {isLoading ? "Loading..." : "Show more"}
-          </button>
-          {error ? <p>{error.message}</p> : null}
+          <ContactsList
+            contacts={orderedContacts}
+            selectedContactsIds={selectedContactsIds}
+            onToggleSelect={toggleContactSelect}
+          />
+          <LoadMoreButton isLoading={isLoading} onClick={fetchNextPage} />
+          {error ? <ErrorMessage message={error.message} /> : null}
         </section>
       </main>
     </div>

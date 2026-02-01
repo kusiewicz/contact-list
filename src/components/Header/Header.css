@@ -1,0 +1,19 @@
+.app__header {
+  padding: 12px 0;
+  text-align: left;
+}
+
+.app__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+}
+
+.app__counter {
+  margin: 6px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+

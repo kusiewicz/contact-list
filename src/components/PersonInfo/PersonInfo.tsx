@@ -1,3 +1,5 @@
+import "./PersonInfo.css";
+
 type PersonInfoProps = {
   firstNameLastName: string;
   jobTitle: string;
@@ -18,18 +20,7 @@ function PersonInfo({
 }: PersonInfoProps) {
   return (
     <article
-      style={{
-        display: "flex",
-        height: "100px",
-        justifyContent: "center",
-        flexDirection: "column",
-        padding: "32px",
-        boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.15)",
-        margin: "10px 0",
-        background: isSelected ? "red" : "#fff",
-        cursor: "pointer",
-      }}
-      className="person-info"
+      className={isSelected ? "person-info person-info--selected" : "person-info"}
       onClick={() => onClick(id)}
     >
       <div className="firstNameLastName">{firstNameLastName}</div>
